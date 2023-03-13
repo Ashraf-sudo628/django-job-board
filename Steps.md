@@ -6,3 +6,9 @@
     - diactivate
 
 - uplaod project on github
+
+
+ulr : path write in browser
+view : logic of the project
+models : DB
+template: forentend 
