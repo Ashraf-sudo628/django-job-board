@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils.text import slugify
 
@@ -21,6 +22,7 @@ def Image_upload(instance,filename):
     return "jobs/%s.%s"%(instance.id,extention)
 
 class JOb(models.Model): #Table in DB
+    Owner = models.ForeignKey(User, verbose_name=("Job_owner"), on_delete=models.CASCADE)
     title = models.CharField(max_length=100) # Column in DB
     Job_type = models.CharField(max_length=15, choices=JOB_TYPE)
     Description = models.TextField(max_length=1000)
