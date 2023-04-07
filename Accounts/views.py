@@ -1,6 +1,8 @@
 from django.shortcuts import render , redirect
-from.forms import SignupForm
+from django.urls import reverse
+from.forms import SignupForm , UserForm , ProfileForm
 from django.contrib.auth import authenticate , login
+from .models import Profile
 
 def signup(request):
     if request.method == "POST":
@@ -18,3 +20,28 @@ def signup(request):
 
 
     return render(request,'registration/signup.html',{'form':form})
+
+
+def profile(request):
+    profile = Profile.objects.get(user = request.user)
+
+    return render(request,'accounts/profile.html',{'profile':profile})
+
+def profile_edit(request):
+    profile = Profile.objects.get(user = request.user)
+
+    if request.method == 'POST':
+        userform = UserForm(request.POST,instance=request.user)
+        profileform  = ProfileForm(request.POST,request.FILES,instance= profile)
+        if userform.is_valid() and profileform.is_valid():
+            userform.save()
+            myProfile = profileform.save(commit=False)
+            myProfile.user = request.user
+            myProfile.save()
+            return redirect(reverse('accounts:profile'))
+
+    else :
+        userform = UserForm(instance=request.user)
+        profileform  = ProfileForm(instance= profile)
+
+    return render(request ,'accounts/profile_edit.html',{'userform':userform,'profileform':profileform})
